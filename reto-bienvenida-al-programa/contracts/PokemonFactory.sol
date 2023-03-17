@@ -20,6 +20,7 @@ contract PokemonFactory {
     event eventNewPokemon(string name);
 
     function createPokemon(string memory _name, uint _id) public {
+        require(_id > 0, "Id should be upper than zero");
         pokemons.push(Pokemon(_id, _name));
         pokemonToOwner[_id] = msg.sender;
         ownerPokemonCount[msg.sender]++;
@@ -28,12 +29,5 @@ contract PokemonFactory {
 
     function getAllPokemons() public view returns (Pokemon[] memory) {
         return pokemons;
-    }
-
-    function getResult() public pure returns (uint product, uint sum) {
-        uint a = 1;
-        uint b = 2;
-        product = a * b;
-        sum = a + b;
     }
 }
