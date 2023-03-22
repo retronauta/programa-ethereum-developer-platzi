@@ -10,6 +10,11 @@ contract PokemonFactory {
         string name;
     }
 
+    struct Type{
+        string pokemonName;
+        string nameType;
+    }
+
     //* Estructura para guardar el nombre y habilidad opcionalmente para cada pokemon
     struct Habilitie {
         string pokemonName;
@@ -23,11 +28,17 @@ contract PokemonFactory {
     //* Un array privado para las habilidades
     Habilitie[] private habilities;
 
+    // Type[] private types;
+
     //* Un mapping es como un diccionario o hashtable con pares key:value
     //* Permite guardar el id de un pokemon a un address  | <id_pokemon> -> <address>
     mapping(uint => address) public pokemonToOwner;
     //* Aqui guardare la cantidad de pokemons que tiene un owner// <address> -> 19
     mapping(address => uint) ownerPokemonCount;
+
+    mapping(string => string[]) weaknesses;
+
+    mapping(string => string[]) types;
 
     event eventNewPokemon(string name);
 
@@ -52,18 +63,38 @@ contract PokemonFactory {
         emit eventNewPokemon(_name);
     }
 
+    function getWeaknesses(string memory _type) public view returns(string[] memory){
+        return weaknesses[_type];
+    }
+
+    // function getPokemonWeakness(string memory _pokemonName)public payable returns(string[] memory){
+    //     string[] memory pokemonTypes;
+    //     string[] memory weaknessesOfPokemon;
+    //     pokemonTypes = getTypes(_pokemonName);
+    //     for(uint i = 0; i < pokemonTypes.length; i++){
+    //         for(uint j = 0; j < getWeaknesses(pokemonTypes[i]).length; i++){
+    //             weaknessesOfPokemon[i] = "hola";
+    //         }
+    //     }
+    //     // getWeaknesses(_type);
+    //     return weaknessesOfPokemon;
+    // }
+
+    function setWeakness(string memory _type, string memory _weakness)public{
+        weaknesses[_type].push(_weakness);
+    }
+
+    function setTypes(string memory _pokemonName, string memory _type) public{
+        types[_pokemonName].push(_type);
+    }
+
+    function getTypes(string memory _pokemonName) public view returns(string[] memory){
+        return types[_pokemonName];
+    }
+
     function getAllPokemons() public view returns (Pokemon[] memory) {
         return pokemons;
     }
-
-    // function exists(uint num) public view returns (bool) {
-    //     for (uint i = 0; i < habilities.length; i++) {
-    //         if (habilities[i] == num) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
 
     function addHabilitie(
         string memory _pokemonName,
@@ -76,4 +107,5 @@ contract PokemonFactory {
     function getAllHabilities() public view returns (Habilitie[] memory) {
         return habilities;
     }
+
 }
