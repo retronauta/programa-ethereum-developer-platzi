@@ -4,15 +4,27 @@ pragma solidity >=0.7.0 <0.9.0;
 
 //* contract es como una clase
 contract PokemonFactory {
+    //* Estructura llamada Pokemon que guardara el id y nombre de este
     struct Pokemon {
         uint id;
         string name;
     }
 
-    //* Un array privado de tipo Pokemon
+    //* Estructura para guardar el nombre y habilidad opcionalmente para cada pokemon
+    struct Habilitie {
+        string pokemonName;
+        string name;
+        string description;
+    }
+
+    //* Un array privado a partir del struct Pokemon
     Pokemon[] private pokemons;
 
-    //*  Permite guardar el pokemon a un address  | 01 -> <address>
+    //* Un array privado para las habilidades
+    Habilitie[] private habilities;
+
+    //* Un mapping es como un diccionario o hashtable con pares key:value
+    //* Permite guardar el id de un pokemon a un address  | <id_pokemon> -> <address>
     mapping(uint => address) public pokemonToOwner;
     //* Aqui guardare la cantidad de pokemons que tiene un owner// <address> -> 19
     mapping(address => uint) ownerPokemonCount;
@@ -33,6 +45,7 @@ contract PokemonFactory {
             getStringLength(_name) > 2,
             "Name's length must not be 0 or less tan 2"
         );
+        //* Pusheo a mi struct el id y name
         pokemons.push(Pokemon(_id, _name));
         pokemonToOwner[_id] = msg.sender;
         ownerPokemonCount[msg.sender]++;
@@ -41,5 +54,26 @@ contract PokemonFactory {
 
     function getAllPokemons() public view returns (Pokemon[] memory) {
         return pokemons;
+    }
+
+    // function exists(uint num) public view returns (bool) {
+    //     for (uint i = 0; i < habilities.length; i++) {
+    //         if (habilities[i] == num) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+
+    function addHabilitie(
+        string memory _pokemonName,
+        string memory _name,
+        string memory _description
+    ) public {
+        habilities.push(Habilitie(_pokemonName, _name, _description));
+    }
+
+    function getAllHabilities() public view returns (Habilitie[] memory) {
+        return habilities;
     }
 }
